@@ -31,17 +31,24 @@ def save_hashes():
         for item in image_hashes:
             f.write("%s\n" % item)
 
+def calculate_hash(bytes):
+    return hashlib.md5(bytes).hexdigest()
+
+def download_image(url):
+    return requests.get(url).content
+
 @client.event
 async def on_message(message):
     if has_image(message):
         url = message.attachments[0]['url']
-        img_data = requests.get(url).content
-        hash = hashlib.md5(img_data).hexdigest()
+        img_data = download_image(url)
+        hash = calculate_hash(img_data)
 
         if hash in image_hashes:
             await client.send_message(message.channel, 'repost')
         else:
             image_hashes.add(hash)
+            save_hashes()
 
     elif message.content.startswith('!sleep'):
         await asyncio.sleep(5)
