@@ -37,26 +37,27 @@ def calculate_hash(bytes):
 def download_image(url):
     return requests.get(url).content
 
-@client.event
-async def on_message(message):
+def is_repost(message):
     if has_image(message):
         url = message.attachments[0]['url']
         img_data = download_image(url)
         hash = calculate_hash(img_data)
 
-        if hash in image_hashes:
-            try:
-                await client.send_message(message.channel, 'repost')
-                await client.delete_message(message)
-            except discord.Forbidden:
-                await client.send_message(message.channel, 'I need permissions to manage messages in order to work.')
-        else:
-            image_hashes.add(hash)
-            save_hashes()
+        return hash in image_hashes
 
-    elif message.content.startswith('!sleep'):
-        await asyncio.sleep(5)
-        await client.send_message(message.channel, 'Done sleeping')
+    return False
+
+@client.event
+async def on_message(message):
+    if is_repost(message):
+        try:
+            await client.send_message(message.channel, message.author.display_name + ' just reposted a meme.')
+            await client.delete_message(message)
+        except discord.Forbidden:
+            await client.send_message(message.channel, 'I need permissions to manage messages in order to work.')
+    else:
+        image_hashes.add(hash)
+        save_hashes()
 
 def main():
     with open(os.path.join(sys.path[0], 'settings.json')) as f:
