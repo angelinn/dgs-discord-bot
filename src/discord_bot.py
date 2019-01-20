@@ -45,8 +45,11 @@ async def on_message(message):
         hash = calculate_hash(img_data)
 
         if hash in image_hashes:
-            await client.send_message(message.channel, 'repost')
-            await client.delete_message(message)
+            try:
+                await client.send_message(message.channel, 'repost')
+                await client.delete_message(message)
+            except discord.Forbidden:
+                await client.send_message(message.channel, 'I need permissions to manage messages in order to work.')
         else:
             image_hashes.add(hash)
             save_hashes()
