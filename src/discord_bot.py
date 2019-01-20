@@ -46,6 +46,7 @@ async def on_message(message):
 
         if hash in image_hashes:
             await client.send_message(message.channel, 'repost')
+            await client.delete_message(message)
         else:
             image_hashes.add(hash)
             save_hashes()
