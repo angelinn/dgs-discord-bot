@@ -1,12 +1,14 @@
 import discord
 import asyncio
-import json
-import os
-import sys
 
 from repost_manager import RepostManager
+from configuration_manager import ConfigurationManager
 
-repost_manager = RepostManager()
+HASHES_FILENAME = 'hashes.txt'
+CONFIGURATION_FILENAME = 'settings.json'
+
+repost_manager = RepostManager(HASHES_FILENAME)
+configuration_manager = ConfigurationManager(CONFIGURATION_FILENAME)
 
 client = discord.Client()
 
@@ -27,10 +29,8 @@ async def on_message(message):
             await client.send_message(message.channel, 'I need permissions to manage messages in order to work.')
 
 def main():
-    with open(os.path.join(sys.path[0], 'settings.json')) as f:
-        data = json.load(f)
-
-    TOKEN = data['token']
+    configuration_manager.load_configuration()
+    TOKEN = configuration_manager.configuration['token']
 
     client.run(TOKEN)
 

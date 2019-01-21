@@ -4,19 +4,20 @@ import os
 import sys
 
 class RepostManager:
-    def __init__(self):
+    def __init__(self, filename):
         self.image_hashes = set()
+        self.hashes_filename = filename
         self.load_hashes()
 
     def load_hashes(self):
-        if os.path.exists(os.path.join(sys.path[0], 'hashes.txt')):
-            with open(os.path.join(sys.path[0], 'hashes.txt')) as f:
+        if os.path.exists(os.path.join(sys.path[0], self.hashes_filename)):
+            with open(os.path.join(sys.path[0], self.hashes_filename)) as f:
                 lines = f.read().splitlines()
                 for hash in lines:
                     self.image_hashes.add(hash)
 
     def save_hashes(self):
-        with open(os.path.join(sys.path[0], 'hashes.txt'), 'w') as f:
+        with open(os.path.join(sys.path[0], self.hashes_filename), 'w') as f:
             for item in self.image_hashes:
                 f.write("%s\n" % item)
 
