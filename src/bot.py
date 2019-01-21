@@ -3,6 +3,7 @@ import asyncio
 
 from repost_manager import RepostManager
 from configuration_manager import ConfigurationManager
+from command_processor import CommandProcessor
 
 
 class RepostBot:
@@ -14,6 +15,7 @@ class RepostBot:
 
         self.configuration_manager = ConfigurationManager(self.CONFIGURATION_FILENAME)
         self.repost_manager = RepostManager(self.HASHES_FILENAME)
+        self.command_processor = CommandProcessor(self)
 
         self.configuration_manager.load_configuration()
 
@@ -22,12 +24,6 @@ class RepostBot:
         self.MASTER_ADMIN_ID = self.configuration_manager.configuration['admin']
 
         self.ABOUT_MESSAGE = self.configuration_manager.configuration['about']
-
-        self.commands = {
-            "r!about": self.about,
-            "r!off": self.off,
-            "r!on": self.on
-        }
 
         self.client = client
 
@@ -41,7 +37,7 @@ class RepostBot:
         print('------')
 
     async def on_message(self, message):
-        await self.process_command(message)
+        await self.command_processor.process_command(message)
         if not self.manually_overriden and self.repost_manager.is_repost(message):
             try:
                 await self.client.send_message(message.channel, message.author.display_name + ' just reposted a meme.')
@@ -72,9 +68,3 @@ class RepostBot:
         if self.is_admin(message.author):
             self.manually_overriden = False
             await self.client.send_message(message.channel, 'Repost control turned on.')
-
-    async def process_command(self, message):
-        if message.content in self.commands:
-            cmd = self.commands[message.content]
-            await cmd(message)
-    
