@@ -9,6 +9,7 @@ from command_processor import CommandProcessor
 class RepostBot:
     HASHES_FILENAME = 'hashes.txt'
     CONFIGURATION_FILENAME = 'settings.json'
+    DEFAULT_CHANNEL = 'memes'
 
     def __init__(self, client):
         self.manually_overriden = False
@@ -37,6 +38,9 @@ class RepostBot:
         print('------')
 
     async def on_message(self, message):
+        if message.channel.name != self.DEFAULT_CHANNEL:
+            return
+            
         await self.command_processor.process_command(message)
         if not self.manually_overriden and self.repost_manager.is_repost(message):
             try:
