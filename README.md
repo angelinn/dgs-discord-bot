@@ -1,7 +1,7 @@
 # Repost Guardian - a discord bot
 
 ## About
-**Discord Guardian** is a discord bot that prevents images from being reposted.
+**Repost Guardian** is a discord bot that prevents images from being reposted.
 
 Its main purpose is to prevent memes from being spammed and reposted in the **#meme** channel.
 
@@ -22,4 +22,4 @@ The bot needs permissions `10240`, which are:
 * Manage messages
 
 ## License
-The bot is licensed under the MIT license.
+The bot is licensed under the terms of the MIT license.
