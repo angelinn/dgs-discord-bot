@@ -14,10 +14,10 @@ The commands are prefixed with the `r!` prefix.
 * `r!off` - turns off the repost protection
 * `r!on` - turns on the repost protection
 
-The `on` and `off` commands are only available to users with the `Administrato` permisson.
+The `on` and `off` commands are only available to users with the `Administrator` permisson.
 
 ## Permissions
-The bot needs permissions **10240**, which are:
+The bot needs permissions `10240`, which are:
 * Read messages
 * Manage messages
 
